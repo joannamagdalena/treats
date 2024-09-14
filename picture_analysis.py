@@ -6,7 +6,7 @@ def calculate_probabilities_for_classes(picture):
     animal_classes = ["dog", "cat", "bird", "other"]
 
     model = AutoModelForZeroShotImageClassification.from_pretrained("openai/clip-vit-large-patch14")
-    processor = AutoProcessor.from_pretrained("openai/clip-vit-large-patch14")
+    processor = AutoProcessor.from_pretrained("openai/clip-vit-large-patch14", clean_up_tokenization_spaces=True)
 
     inputs = processor(images=picture, text=animal_classes, return_tensors="pt", padding=True)
 
@@ -30,6 +30,8 @@ def check_animal(picture):
 
     if highest_probability[0] >= 0.9:
         animal = highest_probability[1]
+    elif highest_probability[1] == "cat" and highest_probability[0] >= 0.8:
+        animal = "cat"
 
     return animal
 
