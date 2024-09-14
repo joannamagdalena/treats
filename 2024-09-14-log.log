@@ -1,0 +1,9 @@
+INFO:root:2024-09-14 19:18:15.198845: Started
+INFO:root:2024-09-14 19:18:32.837625: A dog got some dog treat.
+INFO:root:2024-09-14 19:18:32.837625: Finished
+INFO:root:2024-09-14 19:18:36.715676: Started
+ERROR:root:2024-09-14 19:18:42.147156: Couldn't identify the animal.
+INFO:root:2024-09-14 19:18:42.147156: Finished
+INFO:root:2024-09-14 19:18:45.909646: Started
+ERROR:root:2024-09-14 19:18:46.033221: No picture uploaded.
+INFO:root:2024-09-14 19:18:46.033221: Finished
