@@ -8,9 +8,9 @@ def load_training_data():
     training_data_path = "./training_data"
     number_of_pictures = len(list(glob.glob('./training_data/*/*.jpg')))
 
-    batch_size = int(number_of_pictures/3)
-    pic_height = 180
-    pic_width = 180
+    batch_size = 1
+    pic_height = 512
+    pic_width = 512
 
     training_dataset = tf.keras.utils.image_dataset_from_directory(
         training_data_path,
@@ -36,16 +36,16 @@ def train_model():
     normalized_training_dataset = training_dataset.map(lambda x, y: (normalization_layer(x), y))
 
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Input((180, 180, 3)),
+        tf.keras.layers.Input((512, 512, 3)),
         tf.keras.layers.Rescaling(1./255),
-        tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu'),
+        tf.keras.layers.Conv2D(16, 3, padding='same', activation='softmax'),
         tf.keras.layers.MaxPooling2D(),
-        tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
+        tf.keras.layers.Conv2D(32, 3, padding='same', activation='softmax'),
         tf.keras.layers.MaxPooling2D(),
-        tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
+        tf.keras.layers.Conv2D(64, 3, padding='same', activation='softmax'),
         tf.keras.layers.MaxPooling2D(),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(256, activation='softmax'),
         tf.keras.layers.Dense(number_of_classes)]
     )
 
@@ -53,7 +53,22 @@ def train_model():
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                   metrics=['accuracy'])
 
+    history = model.fit(normalized_training_dataset, epochs=10)
+    acc = history.history['accuracy']
+    loss = history.history['loss']
 
+    plt.figure(figsize=(8, 8))
+    plt.subplot(1, 2, 1)
+    plt.plot(range(10), acc, label='Training Accuracy')
+    plt.legend(loc='lower right')
+    plt.title('Training Accuracy')
 
+    plt.subplot(1, 2, 2)
+    plt.plot(range(10), loss, label='Training Loss')
+    plt.legend(loc='upper right')
+    plt.title('Training Loss')
+    plt.show()
+
+    return model, class_names
 
 #train_model()

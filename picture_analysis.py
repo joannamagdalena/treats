@@ -1,5 +1,8 @@
 from transformers import AutoProcessor, AutoModelForZeroShotImageClassification
 import torch
+from model_training import train_model
+import tensorflow as tf
+import numpy as np
 
 
 def calculate_probabilities_for_classes(picture):
@@ -22,16 +25,24 @@ def calculate_probabilities_for_classes(picture):
     return result
 
 
-def check_animal(picture):
-    animal = "error"
+def check_animal(picture, picture_keras):
+    animal_type = "error"
 
     probabilities_for_classes = calculate_probabilities_for_classes(picture)
     highest_probability = list(probabilities_for_classes[0].values())
 
     if highest_probability[0] >= 0.9:
-        animal = highest_probability[1]
+        animal_type = highest_probability[1]
     elif highest_probability[1] == "cat" and highest_probability[0] >= 0.8:
-        animal = "cat"
+        animal_type = "cat"
 
-    return animal
+    model, animal_classes = train_model()
+    animal_prediction = model.predict(picture_keras)
+    animal_prediction_class = animal_classes[np.argmax(animal_prediction[0])]
+    animal_prediction_probability = np.max(tf.nn.softmax(animal_prediction[0])) * 100
+
+    print(animal_prediction_probability)
+    print(animal_prediction_class)
+
+    return animal_type
 

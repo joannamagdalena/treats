@@ -2,6 +2,7 @@ import logging
 from datetime import date, datetime
 from picture_analysis import *
 from matplotlib import pyplot as plt
+import tensorflow as tf
 
 # logging
 logger = logging.getLogger()
@@ -22,8 +23,8 @@ def update_log_file(animal, treat):
     return True
 
 
-def choose_treat(picture):
-    animal = check_animal(picture)
+def choose_treat(picture, picture_keras):
+    animal = check_animal(picture, picture_keras)
     treat = choose_treat_type(animal)
 
     update_log_file(animal, treat)
@@ -34,7 +35,8 @@ def choose_treat(picture):
 picture_name = input()  # picture file
 try:
     picture_input = plt.imread(picture_name)
-    choose_treat(picture_input)
+    picture_input_keras = tf.expand_dims(tf.keras.utils.img_to_array(tf.keras.utils.load_img(picture_name, target_size=(512, 512))),0)
+    choose_treat(picture_input, picture_input_keras)
 except OSError:
     logger.error(str(datetime.now()) + ": No picture uploaded.")
 
