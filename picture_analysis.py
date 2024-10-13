@@ -36,7 +36,7 @@ def check_animal(picture, picture_keras):
     elif highest_probability[1] == "cat" and highest_probability[0] >= 0.8:
         animal_type = "cat"
 
-    model, animal_classes = train_model()
+    model, animal_classes = train_model(animal_type)
     animal_prediction = model.predict(picture_keras)
     animal_prediction_class = animal_classes[np.argmax(animal_prediction[0])]
     animal_prediction_probability = np.max(tf.nn.softmax(animal_prediction[0])) * 100

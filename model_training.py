@@ -1,6 +1,27 @@
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import os
+from transformers import AutoProcessor, AutoModelForZeroShotImageClassification
+import torch
+
+def types_for_classes(picture):
+    animal_classes = ["dog", "cat", "bird", "other"]
+
+    model = AutoModelForZeroShotImageClassification.from_pretrained("openai/clip-vit-large-patch14")
+    processor = AutoProcessor.from_pretrained("openai/clip-vit-large-patch14", clean_up_tokenization_spaces=True)
+
+    inputs = processor(images=picture, text=animal_classes, return_tensors="pt", padding=True)
+
+    with torch.no_grad():
+        output = model(**inputs)
+
+    probabilities = output.logits_per_image[0].softmax(dim=-1).numpy()
+    probabilities_list = list(probabilities)
+
+    result = [{"probability": prob, "class": animal_class}
+              for prob, animal_class in sorted(zip(probabilities_list, animal_classes), key=lambda x: -x[0])]
+
+    return result
 
 def prepare_training_data(dataset, shuffle=False, augment=False):
     # resizing and normalization of dataset
@@ -25,7 +46,7 @@ def prepare_training_data(dataset, shuffle=False, augment=False):
 
 
 # loading picture data
-def load_training_data():
+def load_training_data(animal_type):
     training_data_path = "./training_data"
     #number_of_pictures = len(list(glob.glob('./training_data/*/*.jpg')))
 
@@ -51,6 +72,7 @@ def load_training_data():
     )
 
     class_names = training_dataset.class_names
+    print(training_dataset)
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
     validation_dataset = prepare_training_data(validation_dataset, shuffle=True, augment=True)
 
@@ -58,9 +80,9 @@ def load_training_data():
 
 
 # training the model
-def train_model():
+def train_model(animal_type):
     # loading dataset
-    training_dataset, validation_dataset, class_names  = load_training_data()
+    training_dataset, validation_dataset, class_names  = load_training_data(animal_type)
     number_of_classes = len(class_names)
 
     model = tf.keras.models.Sequential([
@@ -104,3 +126,4 @@ def train_model():
     return model, class_names
 
 #train_model()
+load_training_data("x")
