@@ -1,3 +1,4 @@
+import glob
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import os
@@ -48,7 +49,15 @@ def prepare_training_data(dataset, shuffle=False, augment=False):
 # loading picture data
 def load_training_data(animal_type):
     training_data_path = "./training_data"
-    #number_of_pictures = len(list(glob.glob('./training_data/*/*.jpg')))
+    folders_with_pictures = list(glob.glob('./training_data/*'))
+    chosen_training_data_paths = []
+    for p in folders_with_pictures:
+        possible_pics = list(glob.glob(p + '/*.jpg'))
+        pic_example = plt.imread(possible_pics[0])
+        if animal_type == list(types_for_classes(pic_example)[0].values())[1]:
+            print(animal_type)
+
+
 
     batch_size = 1
     pic_height = 180
@@ -72,7 +81,6 @@ def load_training_data(animal_type):
     )
 
     class_names = training_dataset.class_names
-    print(training_dataset)
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
     validation_dataset = prepare_training_data(validation_dataset, shuffle=True, augment=True)
 
@@ -126,4 +134,4 @@ def train_model(animal_type):
     return model, class_names
 
 #train_model()
-load_training_data("x")
+load_training_data("dog")
