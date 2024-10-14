@@ -51,7 +51,6 @@ def load_training_data(animal_type):
     )
 
     class_names = training_dataset.class_names
-    print(class_names)
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
     validation_dataset = prepare_training_data(validation_dataset, shuffle=True, augment=True)
 
