@@ -105,4 +105,4 @@ def train_model(animal_type):
     return model, class_names
 
 #train_model()
-load_training_data("cat")
+#load_training_data("cat")
