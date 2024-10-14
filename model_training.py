@@ -35,7 +35,7 @@ def load_training_data(animal_type):
 
     training_dataset = tf.keras.utils.image_dataset_from_directory(
         training_data_path+animal_type,
-        validation_split=0.2,
+        validation_split=0.25,
         subset="training",
         seed=123,
         image_size=(pic_height, pic_width),
@@ -43,7 +43,7 @@ def load_training_data(animal_type):
     )
     validation_dataset = tf.keras.utils.image_dataset_from_directory(
         training_data_path+animal_type,
-        validation_split=0.2,
+        validation_split=0.25,
         subset="validation",
         seed=123,
         image_size=(pic_height, pic_width),
