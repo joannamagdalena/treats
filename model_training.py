@@ -1,28 +1,7 @@
-import glob
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import os
-from transformers import AutoProcessor, AutoModelForZeroShotImageClassification
-import torch
 
-def types_for_classes(picture):
-    animal_classes = ["dog", "cat", "bird", "other"]
-
-    model = AutoModelForZeroShotImageClassification.from_pretrained("openai/clip-vit-large-patch14")
-    processor = AutoProcessor.from_pretrained("openai/clip-vit-large-patch14", clean_up_tokenization_spaces=True)
-
-    inputs = processor(images=picture, text=animal_classes, return_tensors="pt", padding=True)
-
-    with torch.no_grad():
-        output = model(**inputs)
-
-    probabilities = output.logits_per_image[0].softmax(dim=-1).numpy()
-    probabilities_list = list(probabilities)
-
-    result = [{"probability": prob, "class": animal_class}
-              for prob, animal_class in sorted(zip(probabilities_list, animal_classes), key=lambda x: -x[0])]
-
-    return result
 
 def prepare_training_data(dataset, shuffle=False, augment=False):
     # resizing and normalization of dataset
@@ -48,23 +27,14 @@ def prepare_training_data(dataset, shuffle=False, augment=False):
 
 # loading picture data
 def load_training_data(animal_type):
-    training_data_path = "./training_data"
-    folders_with_pictures = list(glob.glob('./training_data/*'))
-    chosen_training_data_paths = []
-    for p in folders_with_pictures:
-        possible_pics = list(glob.glob(p + '/*.jpg'))
-        pic_example = plt.imread(possible_pics[0])
-        if animal_type == list(types_for_classes(pic_example)[0].values())[1]:
-            print(animal_type)
-
-
+    training_data_path = "./training_data/"
 
     batch_size = 1
     pic_height = 180
     pic_width = 180
 
     training_dataset = tf.keras.utils.image_dataset_from_directory(
-        training_data_path,
+        training_data_path+animal_type,
         validation_split=0.2,
         subset="training",
         seed=123,
@@ -72,7 +42,7 @@ def load_training_data(animal_type):
         batch_size=batch_size
     )
     validation_dataset = tf.keras.utils.image_dataset_from_directory(
-        training_data_path,
+        training_data_path+animal_type,
         validation_split=0.2,
         subset="validation",
         seed=123,
@@ -81,6 +51,7 @@ def load_training_data(animal_type):
     )
 
     class_names = training_dataset.class_names
+    print(class_names)
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
     validation_dataset = prepare_training_data(validation_dataset, shuffle=True, augment=True)
 
@@ -134,4 +105,4 @@ def train_model(animal_type):
     return model, class_names
 
 #train_model()
-load_training_data("dog")
+load_training_data("cat")
