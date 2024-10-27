@@ -1,6 +1,9 @@
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import os
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 
 def prepare_training_data(dataset, shuffle=False, augment=False):
