@@ -1,9 +1,8 @@
 from matplotlib import pyplot as plt
 import tensorflow as tf
 import os
-import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
+#from google.colab.patches import cv2_imshow
+import numpy as np
 
 
 def prepare_training_data(dataset, shuffle=False, augment=False):
@@ -52,6 +51,14 @@ def load_training_data(animal_type):
         image_size=(pic_height, pic_width),
         batch_size=batch_size
     )
+
+    plt.figure(figsize=(10, 10))
+    for image, label in training_dataset.take(1):
+        for i in range(9):
+            ax = plt.subplot(3, 3, i + 1)
+            plt.imshow(image[i].numpy().astype("uint8"))
+            plt.title(int(label[i]))
+            plt.axis("off")
 
     class_names = training_dataset.class_names
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
@@ -107,4 +114,4 @@ def train_model(animal_type):
     return model, class_names
 
 #train_model()
-#load_training_data("cat")
+load_training_data("dog")
