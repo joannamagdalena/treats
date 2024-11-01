@@ -52,7 +52,8 @@ def load_training_data(animal_type):
         batch_size=batch_size
     )
 
-    print(type(training_dataset))
+    dataset_v2 = tf.data.Dataset.from_tensor_slices(list(training_dataset))
+
     plt.figure(figsize=(10, 10))
     for image, label in training_dataset.take(1):
         for i in range(9):
