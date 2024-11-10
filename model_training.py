@@ -29,7 +29,7 @@ def prepare_training_data(dataset, shuffle=False, augment=False):
 
 # loading picture data
 def load_training_data(animal_type):
-    training_data_path = "./training_data/"
+    training_data_path = "../training_data/"
 
     batch_size = 1
     pic_height = 180
@@ -116,4 +116,4 @@ def train_model(animal_type):
     return model, class_names
 
 #train_model()
-load_training_data("dog")
+#load_training_data("dog")
