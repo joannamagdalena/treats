@@ -6,7 +6,7 @@ import tensorflow as tf
 
 # logging
 logger = logging.getLogger()
-logging.basicConfig(filename=str(date.today()) + "-log.log", encoding="utf-8", level=logging.INFO)
+logging.basicConfig(filename="../" + str(date.today()) + "-log.log", encoding="utf-8", level=logging.INFO)
 logger.info(str(datetime.now()) + ": Started")
 
 
