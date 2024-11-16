@@ -13,6 +13,12 @@ def choose_images_to_background_removal():
 
     return training_files_diff
 
+def background_removal(image_path):
+    im = Image.open("../training_data"+image_path)
+    image_without_background = remove(im)
+    image_without_background_converted = image_without_background.convert("RGB")
+    image_without_background_converted.save( "../training_data_without_background"+image_path)
 
 
-choose_images_to_background_removal()
+
+#background_removal(choose_images_to_background_removal()[0])
