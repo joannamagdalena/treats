@@ -1,6 +1,7 @@
 import glob
 from rembg import remove
 from PIL import Image
+import tensorflow as tf
 
 def choose_images_to_background_removal():
     training_data_path = "../training_data"
@@ -19,8 +20,15 @@ def background_removal_from_image_training_data():
         im = Image.open("../training_data"+image_path)
         image_without_background = remove(im)
         image_without_background_converted = image_without_background.convert("RGB")
-        image_without_background_converted.save( "../training_data_without_background"+image_path)
+        image_without_background_converted.save("../training_data_without_background"+image_path)
 
 
-#def background_removal(given_image_path):
+def background_removal(given_image):
+    # updating training data - removing background of new images
+    background_removal_from_image_training_data()
+
+    im = Image.open("../input_images/"+given_image)
+    image_without_background = remove(im)
+    image_without_background_converted = image_without_background.convert("RGB")
+    image_without_background_converted.save("../input_images_without_background/"+given_image)
 

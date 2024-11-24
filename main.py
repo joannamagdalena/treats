@@ -3,6 +3,7 @@ from datetime import date, datetime
 from picture_analysis import *
 from matplotlib import pyplot as plt
 import tensorflow as tf
+import background_removal
 
 # logging
 logger = logging.getLogger()
@@ -34,8 +35,9 @@ def choose_treat(picture, picture_keras):
 
 picture_name = input()  # picture file
 try:
-    picture_input = plt.imread("../"+picture_name)
-    picture_input_keras = tf.expand_dims(tf.keras.utils.img_to_array(tf.keras.utils.load_img(picture_name, target_size=(512, 512))),0)
+    picture_input = plt.imread("../input_images/"+picture_name)
+    background_removal.background_removal(picture_name)
+    picture_input_keras = tf.expand_dims(tf.keras.utils.img_to_array(tf.keras.utils.load_img("../input_images_without_background/"+picture_name, target_size=(512, 512))),0)
     choose_treat(picture_input, picture_input_keras)
 except OSError:
     logger.error(str(datetime.now()) + ": No picture uploaded.")
