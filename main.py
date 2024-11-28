@@ -30,6 +30,9 @@ def choose_treat(picture, picture_keras):
 
     update_log_file(animal, treat)
 
+    print(animal)
+    print(treat)
+
     return treat
 
 

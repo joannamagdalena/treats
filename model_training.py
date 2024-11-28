@@ -32,8 +32,8 @@ def load_training_data(animal_type):
     training_data_path = "../training_data_without_background/"
 
     batch_size = 1
-    pic_height = 180
-    pic_width = 180
+    pic_height = 512
+    pic_width = 512
 
     training_dataset = tf.keras.utils.image_dataset_from_directory(
         training_data_path+animal_type,
@@ -105,5 +105,5 @@ def train_model(animal_type):
 
     return model, class_names
 
-#train_model()
+#train_model("dog")
 #load_training_data("dog")
