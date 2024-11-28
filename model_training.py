@@ -52,16 +52,6 @@ def load_training_data(animal_type):
         batch_size=batch_size
     )
 
-    dataset_v2 = tf.data.Dataset.from_tensor_slices(list(training_dataset))
-
-    plt.figure(figsize=(10, 10))
-    for image, label in training_dataset.take(1):
-        for i in range(9):
-            ax = plt.subplot(3, 3, i + 1)
-            plt.imshow(image[i].numpy().astype("uint8"))
-            plt.title(int(label[i]))
-            plt.axis("off")
-
     class_names = training_dataset.class_names
     training_dataset = prepare_training_data(training_dataset, shuffle=True, augment=True)
     validation_dataset = prepare_training_data(validation_dataset, shuffle=True, augment=True)
