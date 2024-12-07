@@ -7,7 +7,7 @@ import numpy as np
 
 def prepare_training_data(dataset, shuffle=False, augment=False):
     # resizing and normalization of dataset
-    resizing_layer = tf.keras.layers.Resizing(180, 180)
+    resizing_layer = tf.keras.layers.Resizing(512, 512)
     dataset = dataset.map(lambda x, y: (resizing_layer(x), y))
     normalization_layer = tf.keras.layers.Rescaling(1. / 255)
     dataset = dataset.map(lambda x, y: (normalization_layer(x), y))
